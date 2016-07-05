@@ -17,6 +17,13 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+   //     UIDevice *deviceInfo = [UIDevice currentDevice];
+        
+     //  NSString *devicename = deviceInfo.ud;
+        
+     //   NSLog(@“Device name:  %@”, deviceInfo.name);
+        
         // Instantiate the UIImagePickerController instance
         self.picker = [[UIImagePickerController alloc] init];
         
@@ -176,9 +183,18 @@
 
 // Delegate method.  UIImagePickerController will call this method as soon as the image captured above is ready to be processed.  This is also like an event callback in JavaScript.
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
+    double compressionRatio=0.;
     // Get a reference to the captured image
-    UIImage* image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    UIImage* image = ([info objectForKey:@"UIImagePickerControllerOriginalImage"]);
+  //   NSData* im1 = UIImageJPEGRepresentation(image, 1.0);
+    
+    NSData* originalImagedata ;
+    
+   // int img_len = imgData.length;
+    
+    
+   // while ([imgData length]>50000) {
+     //  UIImage *newImg=image;
     
     //self.ImageView.image = image;
     
@@ -266,26 +282,64 @@
 
     }
     
-    CGFloat ht = tempheight;
-    CGFloat wt = tempwidth;
+   // CGFloat ht = tempheight;
+  //  CGFloat wt = tempwidth;
     
-  CGSize size1=CGSizeMake(150,150);
+    CGSize size1=CGSizeMake(150,150);
     CGSize size = CGSizeMake(tempwidth, tempheight);
-   
-    newImage=[self resizeImage:newImage newSize:size];
-    UIImage * cmp_image = [self resizeImage:newImage newSize:size1];
-    self.ImageView.image = cmp_image;
-
+     NSData* imageData1 = UIImageJPEGRepresentation(newImage, 0.5);
     
-     NSData* imageData1 = UIImageJPEGRepresentation(newImage, 1.0);
-    NSData* compressed_imageData = UIImageJPEGRepresentation(cmp_image, 1.0);
+    if([imageData1 length] >500000)
+    {
+    NSData* imageData2 = UIImageJPEGRepresentation(newImage, 0.4);
+       // originalImage = imageData1;
+         if([imageData2 length] >500000)
+         {
+           NSData* imageData3 = UIImageJPEGRepresentation(newImage, 0.3);
+               if([imageData3 length] >500000)
+               {
+               
+               
+               }
+               else{
+                originalImagedata = imageData3;
+               }
+         }
+         else
+         {
+         originalImagedata = imageData2;
+         }
+    
+    }
+    
+    else
+    {
+        originalImagedata = imageData1;
+    
+    }
+    
+    UIImage *originalImage = [[UIImage alloc] initWithData:originalImagedata];
+    //  NSData* compressed_imageData = UIImageJPEGRepresentation(cmp_image, 0.6);
+    
+    originalImage = [self resizeImage:originalImage newSize:size];
+    UIImage * cmp_image = [self resizeImage:originalImage newSize:size1];
+    
+    
+   // newImage=[self resizeImage:newImage newSize:size];
+   // UIImage * cmp_image = [self resizeImage:newImage newSize:size1];
+    self.ImageView.image = cmp_image;
+  //  int img_length = originalImagedata.length;
+    
+   // NSData* imageData1 = UIImageJPEGRepresentation(newImage, 0.5);
+  
+   NSData* compressed_imageData = UIImageJPEGRepresentation(cmp_image, 0.6);
     [compressed_imageData writeToFile:compressed_imagePath atomically:YES];
-    [imageData1 writeToFile:imagePath atomically:YES];
+    [originalImagedata writeToFile:imagePath atomically:YES];
+  //  [imageData1 writeToFile:imagePath atomically:YES];
     
     
     NSString * str5 = [defaults objectForKey:@"k1"];
-    ///UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    // UIImageWriteToSavedPhotosAlbum(img,nil,nil,nil);
+  
     if([str5 length] == 0)
     {
         [defaults setObject:imagePath forKey:@"k1"];
