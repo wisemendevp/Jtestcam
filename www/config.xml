@@ -85,4 +85,7 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="ios" spec="~3.9.2" />
+        <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+    <string>need camera access to take pictures</string>
+</edit-config>
 </widget>
