@@ -30,6 +30,9 @@
                 <param name="ios-package" value="ownioscam" />
             </feature>
         </config-file>
+    
+
+        
         
         <!-- core CustomCamera header and source files -->
         <header-file src="platforms/ios/ownioscam/Classes/ownioscam.h" />
